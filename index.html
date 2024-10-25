@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ban Tracker with Accounts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            width: 400px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        button, select, input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        #cubecraftBtn {
+            background-color: #3498db;
+            color: white;
+        }
+
+        #cubecraftBtn:hover {
+            background-color: #2980b9;
+        }
+
+        #hiveBtn {
+            background-color: #e67e22;
+            color: white;
+        }
+
+        #hiveBtn:hover {
+            background-color: #d35400;
+        }
+
+        .timer {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        .account-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Ban Tracker</h2>
+    
+    <div class="account-section">
+        <input type="text" id="newAccountName" placeholder="Enter new account name">
+        <button id="addAccountBtn">Add Account</button>
+
+        <select id="accountSelect">
+            <option value="">Select an account</option>
+        </select>
+    </div>
+
+    <button id="cubecraftBtn">Cubecraft ban (30 days)</button>
+    <button id="hiveBtn">Hive ban (7 days)</button>
+
+    <div class="timer" id="banStatus"></div>
+</div>
+
+<script>
+    // Get elements
+    const addAccountBtn = document.getElementById('addAccountBtn');
+    const accountSelect = document.getElementById('accountSelect');
+    const cubecraftBtn = document.getElementById('cubecraftBtn');
+    const hiveBtn = document.getElementById('hiveBtn');
+    const banStatusEl = document.getElementById('banStatus');
+    const newAccountName = document.getElementById('newAccountName');
+
+    // Ban durations
+    const cubecraftBanDuration = 30 * 24 * 60 * 60 * 1000; // 30 days
+    const hiveBanDuration = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+    // Load accounts from localStorage or initialize empty object
+    let accounts = JSON.parse(localStorage.getItem('accounts')) || {};
+
+    // Helper function to save accounts to localStorage
+    function saveAccounts() {
+        localStorage.setItem('accounts', JSON.stringify(accounts));
+    }
+
+    // Load accounts into the select dropdown
+    function loadAccounts() {
+        accountSelect.innerHTML = '<option value="">Select an account</option>';
+        for (let account in accounts) {
+            let option = document.createElement('option');
+            option.value = account;
+            option.textContent = account;
+            accountSelect.appendChild(option);
+        }
+    }
+
+    // Add a new account
+    addAccountBtn.addEventListener('click', () => {
+        const accountName = newAccountName.value.trim();
+        if (accountName && !accounts[accountName]) {
+            accounts[accountName] = { cubecraftBan: null, hiveBan: null };
+            saveAccounts();
+            loadAccounts();
+            newAccountName.value = ''; // Clear input
+        } else {
+            alert('Account already exists or name is empty');
+        }
+    });
+
+    // Helper function to calculate remaining time
+    function calculateRemainingTime(endTime) {
+        const now = new Date().getTime();
+        const distance = endTime - now;
+        if (distance < 0) {
+            return "Ban is over.";
+        }
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        return `${days}d ${hours}h ${minutes}m ${seconds}s remaining`;
+    }
+
+    // Start a ban for the selected account
+    function startBan(account, banType, duration) {
+        const endTime = new Date().getTime() + duration;
+        accounts[account][banType] = endTime;
+        saveAccounts();
+        updateBanStatus();
+    }
+
+    // Update ban status display for the selected account
+    function updateBanStatus() {
+        const selectedAccount = accountSelect.value;
+        if (!selectedAccount) {
+            banStatusEl.textContent = 'Select an account to view ban status.';
+            return;
+        }
+
+        const account = accounts[selectedAccount];
+        let cubecraftBanTime = account.cubecraftBan ? calculateRemainingTime(account.cubecraftBan) : "No Cubecraft ban.";
+        let hiveBanTime = account.hiveBan ? calculateRemainingTime(account.hiveBan) : "No Hive ban.";
+
+        banStatusEl.innerHTML = `
+            <strong>${selectedAccount}</strong><br>
+            Cubecraft: ${cubecraftBanTime}<br>
+            Hive: ${hiveBanTime}
+        `;
+    }
+
+    // Event listeners for Cubecraft and Hive ban buttons
+    cubecraftBtn.addEventListener('click', () => {
+        const selectedAccount = accountSelect.value;
+        if (selectedAccount) {
+            startBan(selectedAccount, 'cubecraftBan', cubecraftBanDuration);
+        } else {
+            alert('Please select an account.');
+        }
+    });
+
+    hiveBtn.addEventListener('click', () => {
+        const selectedAccount = accountSelect.value;
+        if (selectedAccount) {
+            startBan(selectedAccount, 'hiveBan', hiveBanDuration);
+        } else {
+            alert('Please select an account.');
+        }
+    });
+
+    // Update the ban status every second
+    setInterval(updateBanStatus, 1000);
+
+    // Load accounts on page load
+    loadAccounts();
+</script>
+
+</body>
+</html>
