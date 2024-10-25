@@ -16,7 +16,20 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 123, 255, 0.1);
     text-align: center;
+    position: relative;
 }
+
+.watermark {
+    position: absolute;
+    top: -350px; /* Adjust as needed */
+    right: 1350px; /* Adjust as needed */
+  }
+  
+  .watermark img {
+    width: 100px; /* Adjust size as needed */
+    opacity: 1; /* Transparency for watermark effect */
+  }
+  
 
 h2 {
     color: #2c3e50;
@@ -72,7 +85,7 @@ input {
 
 .account-btn {
     background-color: #3498db;
-    color: white;
+    color: rgb(206, 48, 48);
     border: none;
     border-radius: 8px;
     padding: 10px 20px;
