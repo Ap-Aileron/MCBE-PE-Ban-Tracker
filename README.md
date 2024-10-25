@@ -11,6 +11,8 @@ If you got this from anyone else, it is not the right version.
 
 You may not copy or modify this code.
 
+You may not claim ownership of this code or repository, etc.
+
 You may not use this in any videos without proper credits. 
 
 proper credits being:
