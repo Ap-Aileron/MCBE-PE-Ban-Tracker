@@ -27,7 +27,7 @@
 </div>
 
 <script>
-    // Get elements
+   s
 const addAccountBtn = document.getElementById('addAccountBtn');
 const manageAccountsBtn = document.getElementById('manageAccountsBtn');
 const accountButtons = document.getElementById('accountButtons');
@@ -37,27 +37,25 @@ const banStatusEl = document.getElementById('banStatus');
 const newAccountName = document.getElementById('newAccountName');
 
 // Ban durations
-const cubecraftBanDuration = 30 * 24 * 60 * 60 * 1000; // 30 days
-const hiveBanDuration = 7 * 24 * 60 * 60 * 1000; // 7 days
+const cubecraftBanDuration = 30 * 24 * 60 * 60 * 1000; 
+const hiveBanDuration = 7 * 24 * 60 * 60 * 1000; 
 
-// Load accounts from localStorage or initialize empty object
+
  let accounts = JSON.parse(localStorage.getItem('accounts')) || {};
  let selectedAccount = null;
 
- // Helper function to save accounts to localStorage
 function saveAccounts() {
     localStorage.setItem('accounts', JSON.stringify(accounts));
 }
 
 // Load accounts into buttons
 function loadAccounts() {
-    accountButtons.innerHTML = ''; // Clear existing buttons
+    accountButtons.innerHTML = '';
     for (let account in accounts) {
         let button = document.createElement('button');
         button.className = 'account-btn';
         button.textContent = account;
-
-        // Remove button
+        
         let removeBtn = document.createElement('button');
         removeBtn.className = 'remove-btn';
         removeBtn.textContent = 'X';
@@ -71,7 +69,6 @@ function loadAccounts() {
     }
 }
 
-// Select an account
 function selectAccount(account) {
     selectedAccount = account;
     updateBanStatus();
@@ -81,19 +78,19 @@ function selectAccount(account) {
     event.target.classList.add('active-account');
  }
 
-// Add a new account
+t
 addAccountBtn.addEventListener('click', () => {
     const accountName = newAccountName.value.trim();
     if (accountName && !accounts[accountName]) {
         accounts[accountName] = { cubecraftBan: null, hiveBan: null };
         saveAccounts();
         loadAccounts();
-        newAccountName.value = ''; // Clear input
+        newAccountName.value = ''; 
     } else {
         alert('Account already exists or name is empty');
     }
 });
-// Remove an account
+
 function deleteAccount(account) {
     delete accounts[account];
     saveAccounts();
@@ -103,7 +100,7 @@ function deleteAccount(account) {
         updateBanStatus();
     }
 }
-// Helper function to calculate remaining time
+
 function calculateRemainingTime(endTime) {
     const now = new Date().getTime();
     const distance = endTime - now;
@@ -116,7 +113,7 @@ function calculateRemainingTime(endTime) {
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
     return `${days}d ${hours}h ${minutes}m ${seconds}s remaining`;
 }
-// Start a ban for the selected account
+
 function startBan(banType, duration) {
     if (selectedAccount) {
         const endTime = new Date().getTime() + duration;
@@ -127,7 +124,7 @@ function startBan(banType, duration) {
         alert('Please select an account first.');
     }
 }
-// Update the ban status display
+
 function updateBanStatus() {
     if (selectedAccount) {
         const cubecraftBanEnd = accounts[selectedAccount].cubecraftBan;
@@ -139,10 +136,10 @@ function updateBanStatus() {
         banStatusEl.textContent = 'Select an account to view ban status.';
     }
 }
-// Add event listeners to ban buttons
+
 cubecraftBtn.addEventListener('click', () => startBan('cubecraftBan', cubecraftBanDuration));
 hiveBtn.addEventListener('click', () => startBan('hiveBan', hiveBanDuration));
-// Manage accounts animation
+
 manageAccountsBtn.addEventListener('click', () => {
     accountButtons.classList.toggle('active');
 });
