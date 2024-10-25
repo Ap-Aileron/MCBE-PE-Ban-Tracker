@@ -4,147 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ban Tracker</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f2f6fc;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .container {
-            width: 400px;
-            padding: 30px;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 123, 255, 0.1);
-            text-align: center;
-        }
-
-        h2 {
-            color: #2c3e50;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            font-size: 16px;
-            border-radius: 8px;
-            border: none;
-            color: white;
-            transition: background-color 0.3s ease;
-        }
-
-        #cubecraftBtn {
-            background-color: #3498db;
-        }
-
-        #cubecraftBtn:hover {
-            background-color: #2980b9;
-        }
-
-        #hiveBtn {
-            background-color: #48c9b0;
-        }
-
-        #hiveBtn:hover {
-            background-color: #1abc9c;
-        }
-
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: inset 0 1px 5px rgba(0, 123, 255, 0.1);
-        }
-
-        .account-buttons {
-            display: none;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 20px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .account-btn {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 20px;
-            margin: 5px;
-            cursor: pointer;
-            position: relative;
-            transition: background-color 0.3s ease;
-        }
-
-        .account-btn:hover {
-            background-color: #2980b9;
-        }
-
-        .remove-btn {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: red;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            font-size: 12px;
-            line-height: 18px;
-            padding: 0;
-        }
-
-        .timer {
-            margin-top: 20px;
-            font-size: 16px;
-            color: #2c3e50;
-            background-color: #f7f9fc;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 123, 255, 0.05);
-        }
-
-        .active-account {
-            background-color: #5dade2;
-        }
-
-        #manageAccountsBtn {
-            background-color: #5dade2;
-        }
-
-        #manageAccountsBtn:hover {
-            background-color: #3498db;
-        }
-
-        /* Slide animation */
-        .slide-down {
-            display: block;
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease, opacity 0.5s ease;
-        }
-
-        .slide-down.active {
-            max-height: 400px;
-            opacity: 1;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -168,134 +28,126 @@
 
 <script>
     // Get elements
-    const addAccountBtn = document.getElementById('addAccountBtn');
-    const manageAccountsBtn = document.getElementById('manageAccountsBtn');
-    const accountButtons = document.getElementById('accountButtons');
-    const cubecraftBtn = document.getElementById('cubecraftBtn');
-    const hiveBtn = document.getElementById('hiveBtn');
-    const banStatusEl = document.getElementById('banStatus');
-    const newAccountName = document.getElementById('newAccountName');
+const addAccountBtn = document.getElementById('addAccountBtn');
+const manageAccountsBtn = document.getElementById('manageAccountsBtn');
+const accountButtons = document.getElementById('accountButtons');
+const cubecraftBtn = document.getElementById('cubecraftBtn');
+const hiveBtn = document.getElementById('hiveBtn');
+const banStatusEl = document.getElementById('banStatus');
+const newAccountName = document.getElementById('newAccountName');
 
-    // Ban durations
-    const cubecraftBanDuration = 30 * 24 * 60 * 60 * 1000; // 30 days
-    const hiveBanDuration = 7 * 24 * 60 * 60 * 1000; // 7 days
+// Ban durations
+const cubecraftBanDuration = 30 * 24 * 60 * 60 * 1000; // 30 days
+const hiveBanDuration = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-    // Load accounts from localStorage or initialize empty object
-    let accounts = JSON.parse(localStorage.getItem('accounts')) || {};
-    let selectedAccount = null;
+// Load accounts from localStorage or initialize empty object
+ let accounts = JSON.parse(localStorage.getItem('accounts')) || {};
+ let selectedAccount = null;
 
-    // Helper function to save accounts to localStorage
-    function saveAccounts() {
-        localStorage.setItem('accounts', JSON.stringify(accounts));
-    }
+ // Helper function to save accounts to localStorage
+function saveAccounts() {
+    localStorage.setItem('accounts', JSON.stringify(accounts));
+}
 
-    // Load accounts into buttons
-    function loadAccounts() {
-        accountButtons.innerHTML = ''; // Clear existing buttons
-        for (let account in accounts) {
-            let button = document.createElement('button');
-            button.className = 'account-btn';
-            button.textContent = account;
+// Load accounts into buttons
+function loadAccounts() {
+    accountButtons.innerHTML = ''; // Clear existing buttons
+    for (let account in accounts) {
+        let button = document.createElement('button');
+        button.className = 'account-btn';
+        button.textContent = account;
 
-            // Remove button
-            let removeBtn = document.createElement('button');
-            removeBtn.className = 'remove-btn';
-            removeBtn.textContent = 'X';
-            removeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                deleteAccount(account);
-            });
-
-            button.appendChild(removeBtn);
-            button.addEventListener('click', () => selectAccount(account));
-            accountButtons.appendChild(button);
-        }
-    }
-
-    // Select an account
-    function selectAccount(account) {
-        selectedAccount = account;
-        updateBanStatus();
-        document.querySelectorAll('.account-btn').forEach(btn => {
-            btn.classList.remove('active-account');
+        // Remove button
+        let removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-btn';
+        removeBtn.textContent = 'X';
+        removeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            deleteAccount(account);
         });
-        event.target.classList.add('active-account');
+        button.appendChild(removeBtn);
+        button.addEventListener('click', () => selectAccount(account));
+        accountButtons.appendChild(button);
     }
+}
 
-    // Add a new account
-    addAccountBtn.addEventListener('click', () => {
-        const accountName = newAccountName.value.trim();
-        if (accountName && !accounts[accountName]) {
-            accounts[accountName] = { cubecraftBan: null, hiveBan: null };
-            saveAccounts();
-            loadAccounts();
-            newAccountName.value = ''; // Clear input
-        } else {
-            alert('Account already exists or name is empty');
-        }
+// Select an account
+function selectAccount(account) {
+    selectedAccount = account;
+    updateBanStatus();
+    document.querySelectorAll('.account-btn').forEach(btn => {
+        btn.classList.remove('active-account');
     });
+    event.target.classList.add('active-account');
+ }
 
-    // Remove an account
-    function deleteAccount(account) {
-        delete accounts[account];
+// Add a new account
+addAccountBtn.addEventListener('click', () => {
+    const accountName = newAccountName.value.trim();
+    if (accountName && !accounts[accountName]) {
+        accounts[accountName] = { cubecraftBan: null, hiveBan: null };
         saveAccounts();
         loadAccounts();
-        if (selectedAccount === account) {
-            selectedAccount = null;
-            updateBanStatus();
-        }
+        newAccountName.value = ''; // Clear input
+    } else {
+        alert('Account already exists or name is empty');
     }
-
-    // Helper function to calculate remaining time
-    function calculateRemainingTime(endTime) {
-        const now = new Date().getTime();
-        const distance = endTime - now;
-        if (distance < 0) {
-            return "Ban is over.";
-        }
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        return `${days}d ${hours}h ${minutes}m ${seconds}s remaining`;
-    }
-
-    // Start a ban for the selected account
-    function startBan(banType, duration) {
-        if (selectedAccount) {
-            const endTime = new Date().getTime() + duration;
-            accounts[selectedAccount][banType] = endTime;
-            saveAccounts();
-            updateBanStatus();
-        } else {
-            alert('Please select an account first.');
-        }
-    }
-
-    // Update the ban status display
-    function updateBanStatus() {
-        if (selectedAccount) {
-            const cubecraftBanEnd = accounts[selectedAccount].cubecraftBan;
-            const hiveBanEnd = accounts[selectedAccount].hiveBan;
-            const cubecraftStatus = cubecraftBanEnd ? calculateRemainingTime(cubecraftBanEnd) : 'No Cubecraft ban';
-            const hiveStatus = hiveBanEnd ? calculateRemainingTime(hiveBanEnd) : 'No Hive ban';
-            banStatusEl.textContent = `Cubecraft: ${cubecraftStatus} | Hive: ${hiveStatus}`;
-        } else {
-            banStatusEl.textContent = 'Select an account to view ban status.';
-        }
-    }
-
-    // Add event listeners to ban buttons
-    cubecraftBtn.addEventListener('click', () => startBan('cubecraftBan', cubecraftBanDuration));
-    hiveBtn.addEventListener('click', () => startBan('hiveBan', hiveBanDuration));
-
-    // Manage accounts animation
-    manageAccountsBtn.addEventListener('click', () => {
-        accountButtons.classList.toggle('active');
-    });
-
-    // Initial load of accounts
+});
+// Remove an account
+function deleteAccount(account) {
+    delete accounts[account];
+    saveAccounts();
     loadAccounts();
+    if (selectedAccount === account) {
+        selectedAccount = null;
+        updateBanStatus();
+    }
+}
+// Helper function to calculate remaining time
+function calculateRemainingTime(endTime) {
+    const now = new Date().getTime();
+    const distance = endTime - now;
+    if (distance < 0) {
+        return "Ban is over.";
+    }
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    return `${days}d ${hours}h ${minutes}m ${seconds}s remaining`;
+}
+// Start a ban for the selected account
+function startBan(banType, duration) {
+    if (selectedAccount) {
+        const endTime = new Date().getTime() + duration;
+        accounts[selectedAccount][banType] = endTime;
+        saveAccounts();
+        updateBanStatus();
+    } else {
+        alert('Please select an account first.');
+    }
+}
+// Update the ban status display
+function updateBanStatus() {
+    if (selectedAccount) {
+        const cubecraftBanEnd = accounts[selectedAccount].cubecraftBan;
+        const hiveBanEnd = accounts[selectedAccount].hiveBan;
+        const cubecraftStatus = cubecraftBanEnd ? calculateRemainingTime(cubecraftBanEnd) : 'No Cubecraft ban';
+        const hiveStatus = hiveBanEnd ? calculateRemainingTime(hiveBanEnd) : 'No Hive ban';
+        banStatusEl.textContent = `Cubecraft: ${cubecraftStatus} | Hive: ${hiveStatus}`;
+    } else {
+        banStatusEl.textContent = 'Select an account to view ban status.';
+    }
+}
+// Add event listeners to ban buttons
+cubecraftBtn.addEventListener('click', () => startBan('cubecraftBan', cubecraftBanDuration));
+hiveBtn.addEventListener('click', () => startBan('hiveBan', hiveBanDuration));
+// Manage accounts animation
+manageAccountsBtn.addEventListener('click', () => {
+    accountButtons.classList.toggle('active');
+});
+// Initial load of accounts
+loadAccounts();
 </script>
 
 </body>
