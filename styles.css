@@ -64,6 +64,14 @@ button {
     background-color: #1abc9c;
 }
 
+#lifeboatBtn {
+    background-color: #ed652a;
+}
+
+#lifeboatBtn:hover {
+    background-color: #b16603;
+}
+
 input {
     width: 100%;
     padding: 10px;

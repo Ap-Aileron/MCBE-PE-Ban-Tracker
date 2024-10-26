@@ -4,12 +4,14 @@
     const accountButtons = document.getElementById('accountButtons');
     const cubecraftBtn = document.getElementById('cubecraftBtn');
     const hiveBtn = document.getElementById('hiveBtn');
+    const lifeBtn = document.getElementById('lifeboatBtn')
     const banStatusEl = document.getElementById('banStatus');
     const newAccountName = document.getElementById('newAccountName');
     
     // Ban durations
     const cubecraftBanDuration = 30 * 24 * 60 * 60 * 1000; 
     const hiveBanDuration = 7 * 24 * 60 * 60 * 1000; 
+    const lifeboatBanDuration = 30 * 24 * 60 * 60 * 1000; 
     
   
      let accounts = JSON.parse(localStorage.getItem('accounts')) || {};
@@ -100,10 +102,12 @@
     function updateBanStatus() {
         if (selectedAccount) {
             const cubecraftBanEnd = accounts[selectedAccount].cubecraftBan;
+            const lifeboatBanEnd = accounts[selectedAccount].lifeboatBan;
             const hiveBanEnd = accounts[selectedAccount].hiveBan;
             const cubecraftStatus = cubecraftBanEnd ? calculateRemainingTime(cubecraftBanEnd) : 'No Cubecraft ban';
+            const lifeboatStatus = lifeboatBanEnd ? calculateRemainingTime(lifeboatBanEnd) : 'No Lifeboat ban';
             const hiveStatus = hiveBanEnd ? calculateRemainingTime(hiveBanEnd) : 'No Hive ban';
-            banStatusEl.textContent = `Cubecraft: ${cubecraftStatus} | Hive: ${hiveStatus}`;
+            banStatusEl.textContent = `Cubecraft: ${cubecraftStatus} | Hive: ${hiveStatus} | Lifeboat: ${lifeboatStatus}`;
         } else {
             banStatusEl.textContent = 'Select an account to view ban status.';
         }
@@ -111,6 +115,7 @@
   
     cubecraftBtn.addEventListener('click', () => startBan('cubecraftBan', cubecraftBanDuration));
     hiveBtn.addEventListener('click', () => startBan('hiveBan', hiveBanDuration));
+    lifeBtn.addEventListener('click', () => startBan('lifeboatBan', lifeboatBanDuration));
 
     manageAccountsBtn.addEventListener('click', () => {
         accountButtons.classList.toggle('active');
