@@ -3,35 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ban Tracker</title>
+    <title>Account Manager</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <nav class="navbar">
+        <div class="nav-buttons">
+            <button class="nav-btn active" data-target="addAccount">Add Account</button>
+            <button class="nav-btn" data-target="manageAccounts">Manage Accounts</button>
+            <button class="nav-btn" data-target="banOptions">Ban Options</button>
+        </div>
+    </nav>
 
-<div class="container">
-    <h2>Ban Tracker</h2>
-    
-    <input type="text" id="newAccountName" placeholder="Enter new account name">
-    <button id="addAccountBtn">Add Account</button>
+    <main class="main-container">
+        <section id="addAccountSection" class="section content-section">
+            <h2>Add New Account</h2>
+            <div class="input-group">
+                <input type="text" id="newAccountName" placeholder="Enter account name">
+                <button id="addAccountBtn" class="action-btn">Add Account</button>
+            </div>
+        </section>
 
-    <button id="manageAccountsBtn">Manage Accounts</button>
-    
-    <div class="account-buttons slide-down" id="accountButtons">
-        <!-- Account buttons will be dynamically added here -->
+        <section id="manageAccountsSection" class="section content-section hidden">
+            <h2>Manage Accounts</h2>
+            <div id="accountButtons" class="account-buttons"></div>
+        </section>
+
+        <section id="banOptionsSection" class="section content-section hidden">
+            <h2>Ban Options</h2>
+            
+            <div class="account-selection">
+                <div class="selected-account-display">
+                    Selected Account: <span id="selectedAccountDisplay">None</span>
+                </div>
+                <select id="accountSelect">
+                    <option value="">Select an account</option>
+                </select>
+            </div>
+
+            <div class="ban-buttons">
+                <button id="cubecraftBtn" class="ban-btn">Cubecraft Ban (30 days)</button>
+                <button id="hiveBtn" class="ban-btn">Hive Ban (7 days)</button>
+                <button id="lifeboatBtn" class="ban-btn">Lifeboat Ban (30 days)</button>
+                <button id="customBanBtn" class="ban-btn">Custom Ban</button>
+            </div>
+
+            <div id="banStatus" class="timer">
+                Select an account to view ban status.
+            </div>
+        </section>
+
+    </main>
+
+    <div id="customBanModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModal" class="close">&times;</span>
+            <h3>Custom Ban</h3>
+            <div class="input-group">
+                <input type="text" id="customBanName" placeholder="Ban name">
+                <input type="number" id="customBanDuration" placeholder="Duration (days)">
+                <button id="startCustomBanBtn" class="action-btn">Start Custom Ban</button>
+            </div>
+        </div>
     </div>
 
-    <button id="cubecraftBtn">Cubecraft ban (30 days)</button>
-    <button id="hiveBtn">Hive ban (7 days)</button>
-    <button id="lifeboatBtn"> Lifeboat ban (30 days)</button>
-
-    <div class="timer" id="banStatus">Select an account to view ban status.</div>
     <div class="watermark">
         <img src="Logo.png" alt="Watermark Logo">
-      </div>
-      
-</div>
+    </div>
 
-<script src="index.js"></script>
-
+    <script src="index.js"></script>
 </body>
 </html>
