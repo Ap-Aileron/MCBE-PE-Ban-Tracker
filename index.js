@@ -1,10 +1,8 @@
-// Navigation Buttons
 const navButtons = document.querySelectorAll('.nav-btn');
 const addAccountSection = document.getElementById('addAccountSection');
 const manageAccountsSection = document.getElementById('manageAccountsSection');
 const banOptionsSection = document.getElementById('banOptionsSection');
 
-// Action Buttons
 const addAccountBtn = document.getElementById('addAccountBtn');
 const manageAccountsBtn = document.getElementById('manageAccountsBtn');
 const accountButtons = document.getElementById('accountButtons');
@@ -15,27 +13,22 @@ const customBanBtn = document.getElementById('customBanBtn');
 const banStatusEl = document.getElementById('banStatus');
 const newAccountName = document.getElementById('newAccountName');
 
-// Account Selection Elements
 const accountSelect = document.getElementById('accountSelect');
 const selectedAccountDisplay = document.getElementById('selectedAccountDisplay');
 
-// Modal Elements
 const customBanModal = document.getElementById('customBanModal');
 const closeModal = document.getElementById('closeModal');
 const customBanName = document.getElementById('customBanName');
 const customBanDuration = document.getElementById('customBanDuration');
 const startCustomBanBtn = document.getElementById('startCustomBanBtn');
 
-// Ban Durations (in milliseconds)
 const cubecraftBanDuration = 30 * 24 * 60 * 60 * 1000;
 const hiveBanDuration = 7 * 24 * 60 * 60 * 1000;
 const lifeboatBanDuration = 30 * 24 * 60 * 60 * 1000;
 
-// Data Storage
 let accounts = {};
 let selectedAccount = null;
 
-// Load accounts from localStorage
 function loadAccounts() {
     try {
         const savedAccounts = localStorage.getItem('accounts');
@@ -46,7 +39,6 @@ function loadAccounts() {
     }
 }
 
-// Save Accounts to localStorage
 function saveAccounts() {
     try {
         localStorage.setItem('accounts', JSON.stringify(accounts));
@@ -56,7 +48,6 @@ function saveAccounts() {
     }
 }
 
-// Save selected account
 function saveSelectedAccount() {
     try {
         localStorage.setItem('selectedAccount', selectedAccount || '');
@@ -65,7 +56,6 @@ function saveSelectedAccount() {
     }
 }
 
-// Load selected account
 function loadSelectedAccount() {
     try {
         selectedAccount = localStorage.getItem('selectedAccount');
@@ -83,7 +73,6 @@ function loadSelectedAccount() {
     }
 }
 
-// Update account dropdown
 function updateAccountDropdown() {
     accountSelect.innerHTML = '<option value="">Select an account</option>';
     Object.keys(accounts).sort().forEach(accountName => {
@@ -97,12 +86,10 @@ function updateAccountDropdown() {
     });
 }
 
-// Update selected account display
 function updateSelectedAccountDisplay() {
     selectedAccountDisplay.textContent = selectedAccount || 'None';
 }
 
-// Calculate Remaining Time
 function calculateRemainingTime(endTime) {
     const now = Date.now();
     const remaining = endTime - now;
@@ -116,7 +103,6 @@ function calculateRemainingTime(endTime) {
     return `${days}d ${hours}h ${minutes}m ${seconds}s remaining`;
 }
 
-// Update Ban Status Display
 function updateBanStatus() {
     if (selectedAccount && accounts[selectedAccount]) {
         const accountBans = accounts[selectedAccount];
@@ -135,7 +121,6 @@ function updateBanStatus() {
     }
 }
 
-// Render Account Buttons
 function renderAccountButtons() {
     accountButtons.innerHTML = '';
     if (Object.keys(accounts).length === 0) {
@@ -148,7 +133,6 @@ function renderAccountButtons() {
         button.className = 'account-btn';
         button.textContent = accountName;
 
-        // Remove Button
         const removeBtn = document.createElement('button');
         removeBtn.className = 'remove-btn';
         removeBtn.textContent = '×';
@@ -160,7 +144,6 @@ function renderAccountButtons() {
 
         button.appendChild(removeBtn);
 
-        // Select Account
         button.addEventListener('click', () => {
             selectedAccount = accountName;
             saveSelectedAccount();
@@ -176,7 +159,6 @@ function renderAccountButtons() {
     highlightSelectedAccount();
 }
 
-// Highlight Selected Account
 function highlightSelectedAccount() {
     const buttons = document.querySelectorAll('.account-btn');
     buttons.forEach(btn => {
@@ -188,7 +170,6 @@ function highlightSelectedAccount() {
     });
 }
 
-// Add New Account
 addAccountBtn.addEventListener('click', () => {
     const accountName = newAccountName.value.trim();
     if (accountName === '') {
@@ -206,14 +187,12 @@ addAccountBtn.addEventListener('click', () => {
     newAccountName.value = '';
 });
 
-// Add account on Enter key
 newAccountName.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         addAccountBtn.click();
     }
 });
 
-// Delete Account
 function deleteAccount(accountName) {
     if (confirm(`Are you sure you want to delete the account "${accountName}"?`)) {
         delete accounts[accountName];
@@ -229,7 +208,6 @@ function deleteAccount(accountName) {
     }
 }
 
-// Apply Ban
 function applyBan(banType, duration) {
     if (!selectedAccount) {
         alert('Please select an account first.');
@@ -241,7 +219,6 @@ function applyBan(banType, duration) {
     updateBanStatus();
 }
 
-// Clean expired bans
 function cleanExpiredBans() {
     let changed = false;
     Object.keys(accounts).forEach(account => {
@@ -258,7 +235,6 @@ function cleanExpiredBans() {
     }
 }
 
-// Account dropdown change handler
 accountSelect.addEventListener('change', (e) => {
     selectedAccount = e.target.value;
     saveSelectedAccount();
@@ -267,7 +243,6 @@ accountSelect.addEventListener('change', (e) => {
     updateSelectedAccountDisplay();
 });
 
-// Event Listeners for Ban Buttons
 cubecraftBtn.addEventListener('click', () => applyBan('Cubecraft Ban', cubecraftBanDuration));
 hiveBtn.addEventListener('click', () => applyBan('Hive Ban', hiveBanDuration));
 lifeboatBtn.addEventListener('click', () => applyBan('Lifeboat Ban', lifeboatBanDuration));
@@ -280,14 +255,12 @@ customBanBtn.addEventListener('click', () => {
     customBanName.focus();
 });
 
-// Close Modal
 closeModal.addEventListener('click', () => {
     customBanModal.style.display = 'none';
     customBanName.value = '';
     customBanDuration.value = '';
 });
 
-// Start Custom Ban
 startCustomBanBtn.addEventListener('click', () => {
     const banName = customBanName.value.trim();
     const durationDays = parseInt(customBanDuration.value);
@@ -308,24 +281,19 @@ startCustomBanBtn.addEventListener('click', () => {
     saveAccounts();
     updateBanStatus();
 
-    // Reset and close modal
     customBanName.value = '';
     customBanDuration.value = '';
     customBanModal.style.display = 'none';
 });
 
-// Navigation Button Functionality
 navButtons.forEach(btn => {
     btn.addEventListener('click', () => {
-        // Remove active class from all nav buttons
         navButtons.forEach(button => button.classList.remove('active'));
-        // Add active class to the clicked button
+        
         btn.classList.add('active');
 
-        // Hide all sections
         document.querySelectorAll('.content-section').forEach(section => section.classList.add('hidden'));
 
-        // Show the targeted section
         const target = btn.getAttribute('data-target');
         if (target === 'addAccount') {
             addAccountSection.classList.remove('hidden');
@@ -337,7 +305,6 @@ navButtons.forEach(btn => {
     });
 });
 
-// Close modal when clicking outside
 window.addEventListener('click', (e) => {
     if (e.target === customBanModal) {
         customBanModal.style.display = 'none';
@@ -346,14 +313,12 @@ window.addEventListener('click', (e) => {
     }
 });
 
-// Submit custom ban on Enter key
 customBanDuration.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
         startCustomBanBtn.click();
     }
 });
 
-// Initialize
 loadAccounts();
 renderAccountButtons();
 loadSelectedAccount();
